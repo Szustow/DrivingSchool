@@ -36,12 +36,15 @@ namespace Login_and_Register_System
 
         private void registrationButton_Click(object sender, EventArgs e)
         {
+            string name = txtUsername.Text;
+            string password = txtPassword.Text;
+
             if (conn != null && conn.State == ConnectionState.Open)
             {
                 conn.Close();
             }
             conn.Open();
-            string login = ("SELECT * FROM users WHERE user_name =  '" + txtUsername.Text +"' and password = '"+txtPassword.Text+"' ");
+            string login = "SELECT * FROM users WHERE user_name =  '" + name +"' and password = '" + password + "' ";
             cmd = new NpgsqlCommand(login, conn);
             NpgsqlDataReader dr = cmd.ExecuteReader();
            
@@ -52,11 +55,11 @@ namespace Login_and_Register_System
                 conn.Open();
 
                 MessageBox.Show("Successful login", "Login", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                string role = ($"SELECT user_role FROM users WHERE user_name = '{txtUsername.Text}'");
-                cmd = new NpgsqlCommand(role, conn);
-                new Dashboard().Show();
-                Dashboard.instance.lbl1.Text = txtUsername.Text;
-                Dashboard.instance.lbl2.Text = cmd.ExecuteScalar().ToString();
+                string roleQuery = $"SELECT user_role FROM users WHERE user_name = '{name}'";
+
+                cmd = new NpgsqlCommand(roleQuery, conn);
+                string role = cmd.ExecuteScalar().ToString();
+                new Dashboard(name, role).Show();
 
                 conn.Close();
                 this.Hide();

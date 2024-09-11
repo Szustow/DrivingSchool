@@ -24,15 +24,15 @@ namespace Login_and_Register_System
         NpgsqlDataAdapter da = new NpgsqlDataAdapter();
         private void Form1_Load(object sender, EventArgs e)
         {
-            //this.ActiveControl = txtEmail;
+
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            txtEmail.Text = "";
-            txtUsername.Text = "";
-            txtPassword.Text = "";
-            txtPhone.Text = "";
+            txtEmail.Clear();   
+            txtUsername.Clear();
+            txtPassword.Clear();
+            txtPhone.Clear();
             txtEmail.Focus();
         }
 
@@ -43,21 +43,26 @@ namespace Login_and_Register_System
 
         private void registrationButton_Click(object sender, EventArgs e)
         {
-            if (txtEmail.Text == "" || txtUsername.Text == "" || txtPassword.Text == "" || txtPhone.Text == "")
+            string email = txtEmail.Text;
+            string username = txtUsername.Text;
+            string password = txtPassword.Text;
+            string phone = txtPhone.Text;
+
+            if (email == "" || username == "" || password == "" || phone == "")
             {
                 MessageBox.Show("Please fill in all fields", "Sign Up Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
                 conn.Open();
-                string query = $"SELECT * FROM users WHERE user_name = '{txtUsername.Text}'";
+                string query = $"SELECT * FROM users WHERE user_name = '{username}'";
                 cmd = new NpgsqlCommand(query, conn);
                 NpgsqlDataReader dr = cmd.ExecuteReader();
 
                 if (dr.HasRows)
                 {
                     conn.Close();
-                    MessageBox.Show($"A user with that username {txtUsername.Text} already exists", "Sign Up Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"A user with that username '{username}' already exists", "Sign Up Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 else conn.Close();
@@ -65,14 +70,16 @@ namespace Login_and_Register_System
                 try
                 {
                     conn.Open();
-                    string register = $"INSERT INTO users (user_name,password,user_role,phone,email) VALUES ('{txtUsername.Text}','{txtPassword.Text}','student','{txtPhone.Text}','{txtEmail.Text}')";
+                    string register = $"INSERT INTO users (user_name,password,user_role,phone,email) VALUES ('{username}','{password}','student','{phone}','{email}')";
                     cmd = new NpgsqlCommand(register, conn);
                     cmd.ExecuteNonQuery();
                     conn.Close();
-                    txtEmail.Text = "";
-                    txtUsername.Text = "";
-                    txtPassword.Text = "";
-                    txtPhone.Text = "";
+
+                    txtEmail.Clear();
+                    txtUsername.Clear();
+                    txtPassword.Clear();
+                    txtPhone.Clear();
+
                     MessageBox.Show("Your account has been Successfully Created", "Registration", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
