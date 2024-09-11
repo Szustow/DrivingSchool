@@ -13,12 +13,14 @@ namespace Login_and_Register_System
     public partial class Dashboard : Form
     {
         public static Dashboard instance;
-        public Label lbl;
+        public Label lbl1;
+        public Label lbl2;
         public Dashboard()
         {
             InitializeComponent();
             instance = this;
-            lbl = label1;
+            lbl1 = label1;
+            lbl2 = label2;
         }
 
         private void Dashboard_Load(object sender, EventArgs e)

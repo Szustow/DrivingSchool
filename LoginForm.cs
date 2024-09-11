@@ -49,9 +49,16 @@ namespace Login_and_Register_System
             if (dr.Read() == true)
             {
                 conn.Close();
+                conn.Open();
+
                 MessageBox.Show("Successful login", "Login", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                string role = ($"SELECT user_role FROM users WHERE user_name = '{txtUsername.Text}'");
+                cmd = new NpgsqlCommand(role, conn);
                 new Dashboard().Show();
-                Dashboard.instance.lbl.Text = txtUsername.Text;
+                Dashboard.instance.lbl1.Text = txtUsername.Text;
+                Dashboard.instance.lbl2.Text = cmd.ExecuteScalar().ToString();
+
+                conn.Close();
                 this.Hide();
             }
             else
